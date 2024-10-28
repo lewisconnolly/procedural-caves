@@ -7,6 +7,14 @@ To run, add to Unity Hub using "Add project from disk".
 
 After launching, edit parameters in inspector on Cave Generator object or using in-game UI.
 
+Controls:
+
+* WASD to move.
+
+* Mouse to look around.
+
+* [Enter] to lock/unlock cursor.
+
 <img width="1238" alt="procedural-caves-cover" src="https://github.com/user-attachments/assets/669c969f-49e8-409f-aadc-0c2b9ab695c6">
 
 <img width="713" alt="2" src="https://github.com/user-attachments/assets/08472553-4730-47c2-a114-d347946e2c7a">
