@@ -31,6 +31,7 @@ public class MeshGenerator3 : MonoBehaviour
 
     Mesh mesh;
     MeshFilter meshFilter;
+    //MeshCollider meshCollider;
 
     public GameObject statusIndicator;
 
@@ -63,9 +64,10 @@ public class MeshGenerator3 : MonoBehaviour
         
         gridGenerator = GetComponent<GridGenerator>();
         meshFilter = GetComponent<MeshFilter>();
+        //meshCollider = GetComponent<MeshCollider>();
         speleothemGenerator = GetComponent<SpeleothemGenerator>();
         mesh = new Mesh();
-        meshFilter.mesh = mesh;
+        meshFilter.mesh = mesh;        
         grid = gridGenerator.grid;
         hermiteData = new Dictionary<Vector3, DataStructures.HermiteData>();
         vertices = new List<Vector3>();
@@ -91,6 +93,8 @@ public class MeshGenerator3 : MonoBehaviour
         GenerateTriangles();
         CalculateUVs();
         if (generateSpeleothems) GenerateSpeleothems();
+
+        //meshCollider.sharedMesh = mesh;
     }
 
     void CalculateHermiteData(Vector3 cellCorner)

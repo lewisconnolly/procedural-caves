@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using static DataStructures;
 using static GridGenerator;
+using UnityEngine.UI;
 
 public class MeshGenerator2 : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class MeshGenerator2 : MonoBehaviour
 
     Mesh mesh;
     MeshFilter meshFilter;
+    //MeshCollider meshCollider;
 
     public GameObject statusIndicator;
 
@@ -53,6 +55,7 @@ public class MeshGenerator2 : MonoBehaviour
         
         gridGenerator = GetComponent<GridGenerator>();
         meshFilter = GetComponent<MeshFilter>();
+        //meshCollider = GetComponent<MeshCollider>();
         speleothemGenerator = GetComponent<SpeleothemGenerator>();
         mesh = new Mesh();
         meshFilter.mesh = mesh;
@@ -98,7 +101,9 @@ public class MeshGenerator2 : MonoBehaviour
             }
         }
 
-        if (generateSpeleothems) triangles.AddRange(GenerateSpeleothems());      
+        if (generateSpeleothems) triangles.AddRange(GenerateSpeleothems());
+
+        //meshCollider.sharedMesh = mesh;
     }
 
     private Vector3 GetCentreVertex(Vector3[] corners)

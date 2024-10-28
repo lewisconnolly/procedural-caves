@@ -11,6 +11,7 @@ using System.Threading;
 using Unity.Burst;
 using TMPro;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
 public class GridGenerator : MonoBehaviour
 {
@@ -64,7 +65,7 @@ public class GridGenerator : MonoBehaviour
     List<int> nbrsForSurvival;
     List<int> nbrsForBirth;
     public string survivalRuleStr;
-    public string birthRuleStr;
+    public string birthRuleStr;    
 
     JobHandle handle;
     NativeParallelHashMap<Vector3, DataStructures.Cell> newGrid;
@@ -87,8 +88,8 @@ public class GridGenerator : MonoBehaviour
     public Toggle useMooreToggle;
     public Toggle useRandomSeedToggle;
     public TMP_InputField seedIF;
-    public TMP_InputField numStatesIF;   
-
+    public TMP_InputField numStatesIF;
+    
     void Start()
     {
     }
@@ -105,6 +106,23 @@ public class GridGenerator : MonoBehaviour
         //        statusIndicator.SetActive(true);
         //    }
         //}
+
+        //Add listener for when the value of the Dropdown changes, to take action
+        rulePresetDD.onValueChanged.AddListener(delegate {
+            DropdownValueChanged(rulePresetDD);
+        });
+    }
+
+    public void DropdownValueChanged(TMP_Dropdown dropdown)
+    {
+        rulePreset = (RulePreset)dropdown.value;
+
+        SetUpRules();
+
+        numStatesIF.text = numStates.ToString();
+        survivalIF.text = survivalRuleStr;
+        birthIF.text = birthRuleStr;
+        useMooreToggle.isOn = useMooreNeighbours;
     }
 
     private void GetInput()
@@ -122,7 +140,7 @@ public class GridGenerator : MonoBehaviour
         useRandomSeed = useRandomSeedToggle.isOn;
         seed = seedIF.text;
         numStates = int.Parse(numStatesIF.text);
-    }
+    }    
 
     public void GenerateGrid()
     {
@@ -231,11 +249,32 @@ public class GridGenerator : MonoBehaviour
                 useMooreNeighbours = true;
                 break;
 
+            case RulePreset.CrystalGrowth1:
+                survivalRuleStr = "0-6";
+                birthRuleStr = "1,3";
+                numStates = 2;
+                useMooreNeighbours = false;
+                break;
+
+            case RulePreset.CrystalGrowth2:
+                survivalRuleStr = "1-2";
+                birthRuleStr = "1,3";
+                numStates = 5;
+                useMooreNeighbours = false;
+                break;
+
             case RulePreset.DiamondGrowth:
                 survivalRuleStr = "5-6";
                 birthRuleStr = "1-3";
                 numStates = 7;
                 useMooreNeighbours = false;
+                break;
+
+            case RulePreset.ExpandingShell:
+                survivalRuleStr = "6,7-9,11,13,15-16,18";
+                birthRuleStr = "6-10,13-14,16,18-19,22-25";
+                numStates = 5;
+                useMooreNeighbours = true;
                 break;
 
             case RulePreset.MoreStructures:
@@ -320,28 +359,7 @@ public class GridGenerator : MonoBehaviour
                 birthRuleStr = "1,4-5";
                 numStates = 5;
                 useMooreNeighbours = false;
-                break;
-
-            case RulePreset.CrystalGrowth1:
-                survivalRuleStr = "0-6";
-                birthRuleStr = "1,3";
-                numStates = 2;
-                useMooreNeighbours = false;
-                break;
-
-            case RulePreset.CrystalGrowth2:
-                survivalRuleStr = "1-2";
-                birthRuleStr = "1,3";
-                numStates = 5;
-                useMooreNeighbours = false;
-                break;
-
-            case RulePreset.ExpandingShell:
-                survivalRuleStr = "6,7-9,11,13,15-16,18";
-                birthRuleStr = "6-10,13-14,16,18-19,22-25";
-                numStates = 5;
-                useMooreNeighbours = true;
-                break;
+                break;                        
         }
     }
 
@@ -383,6 +401,8 @@ public class GridGenerator : MonoBehaviour
         }
 
         UnityEngine.Random.InitState(seed.GetHashCode());
+
+        seedIF.text = seed;
 
         for (int i = 0; i < width; i++)
         {
